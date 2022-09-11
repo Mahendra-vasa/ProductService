@@ -1,12 +1,12 @@
 package com.ibm.productservice.entity;
 
 import javax.persistence.Column;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "product")
@@ -16,6 +16,7 @@ public class Product {
     @Column(name = "id")
     private int id;
     @Column(name = "name")
+    @NotEmpty
     private String name;
     @Column(name = "description")
     private String desc;

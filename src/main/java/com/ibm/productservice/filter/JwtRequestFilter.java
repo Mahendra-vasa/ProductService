@@ -1,10 +1,14 @@
 package com.ibm.productservice.filter;
 
 import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import com.ibm.productservice.service.jwt.JwtUserDetailsService;
 import com.ibm.productservice.util.JwtTokenUtil;
 
@@ -29,13 +31,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
 
+	private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
 			FilterChain chain)
 			throws ServletException, IOException {
 		// this will contain the logic for validating the token value
 		String tokenHeader = request.getHeader("Authorization");
-		System.out.println("token header "+tokenHeader);
+		log.info("tokenHeader: "+tokenHeader);
 		if(tokenHeader!=null && tokenHeader.startsWith("Bearer")) {
 			String jwtToken = tokenHeader.substring(7);
 			String userName = jwtTokenUtil.getUserNameFromToken(jwtToken);
@@ -53,6 +57,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 					throw new ServletException("token invalid");
 				}
 			} 
+			
 		} else {
 			chain.doFilter(request, response);
 		}

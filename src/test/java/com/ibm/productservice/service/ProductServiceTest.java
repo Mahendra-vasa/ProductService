@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ibm.productservice.entity.Product;
+import com.ibm.productservice.exception.NoDataFoundException;
 
 @SpringBootTest
 public class ProductServiceTest {
@@ -28,7 +29,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	public void getAllEmployeesTest()
+	public void getAllProductsTest() throws NoDataFoundException
 	{
 		List<Product> list = new ArrayList<Product>();
 		Product prod1 = new Product(1, "TV", "TV Product", 1200.09f,"2022-09-07");
