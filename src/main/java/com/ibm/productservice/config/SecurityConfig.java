@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +22,7 @@ import com.ibm.productservice.service.jwt.JwtUserDetailsService;
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = false, securedEnabled = false, jsr250Enabled = true)
 //WebSecurityConfigurerAdapter is a convenience class that 
 //allows customization to both WebSecurity and HttpSecurity
 //we will override default security features
@@ -65,7 +67,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().authorizeRequests()
-		.antMatchers("/login").permitAll().anyRequest()
+		.antMatchers("/login").permitAll()
+//		.antMatchers("/getProduct/**").hasAuthority("customer") // can pass multiple roles
+//        .antMatchers("/saveProduct/**").hasAuthority("admin")
+		.antMatchers("/getProducts/**").hasRole("customer")
+		.antMatchers("/saveProduct/**").hasRole("admin") 
+		.anyRequest()
 		.authenticated().and().exceptionHandling()
 		.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 		.and().sessionManagement()
@@ -76,7 +83,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterBefore(jwtRequestFilter, 
 				UsernamePasswordAuthenticationFilter.class);
 	}
-	
-	
-
 }

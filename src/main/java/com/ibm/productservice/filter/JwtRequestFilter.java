@@ -2,6 +2,7 @@ package com.ibm.productservice.filter;
 
 import java.io.IOException;
 
+import javax.management.relation.Role;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import com.ibm.productservice.service.jwt.JwtUserDetailsService;
 import com.ibm.productservice.util.JwtTokenUtil;
 
@@ -47,6 +49,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			//validate the user name
 			if(userName!=null) {
 				UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(userName);
+				log.info("userDetails.getAuthorities(): "+userDetails.getAuthorities());
 				if(userDetails.getUsername().equals(userName)) {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 					usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

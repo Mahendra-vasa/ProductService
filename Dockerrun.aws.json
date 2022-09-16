@@ -1,0 +1,13 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+        "Name": "mahendra83/mahidockerrepo:productlatest",
+        "Update": "true"
+    },
+    "Ports": [
+        {
+            "hostPort": 80,
+            "ContainerPort": "5000"
+        }
+    ]
+}

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.ibm.productservice.model.UserData;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -21,11 +23,11 @@ public class JwtTokenUtil implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//this method generates JWT token
-	public String generateToken(String user) {
+	public String generateToken(UserData user) {
 		Map<String, Object> claims = new HashMap<String,Object>();
-		claims.put("role", "admin");
+		claims.put("roles", user.getUserType());
 		return Jwts.builder().setClaims(claims)
-				.setSubject(user)
+				.setSubject(user.getUserName())
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis()+(3600*1000)))
 				.signWith(SignatureAlgorithm.HS512, "secret").compact();
